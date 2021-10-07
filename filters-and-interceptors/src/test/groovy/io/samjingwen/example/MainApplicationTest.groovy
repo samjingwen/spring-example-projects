@@ -24,14 +24,22 @@ class FiltersAndInterceptorsSpec extends Specification {
     @Autowired
     MockMvc mockMvc;
 
-    ListAppender<ILoggingEvent> logWatcher;
+    ListAppender<ILoggingEvent> simpleControllerLogWatcher;
+    ListAppender<ILoggingEvent> simpleFilterLogWatcher;
+    ListAppender<ILoggingEvent> simpleInterceptorLogWatcher;
 
     def setup() {
-        this.logWatcher = new ListAppender<>();
-        this.logWatcher.start()
-        ((Logger) LoggerFactory.getLogger(SimpleController.class)).addAppender(this.logWatcher);
-        ((Logger) LoggerFactory.getLogger(SimpleFilter.class)).addAppender(this.logWatcher);
-        ((Logger) LoggerFactory.getLogger(SimpleInterceptor.class)).addAppender(this.logWatcher);
+        this.simpleControllerLogWatcher = new ListAppender<>();
+        this.simpleFilterLogWatcher = new ListAppender<>();
+        this.simpleInterceptorLogWatcher = new ListAppender<>();
+
+        this.simpleControllerLogWatcher.start()
+        this.simpleFilterLogWatcher.start()
+        this.simpleInterceptorLogWatcher.start()
+
+        ((Logger) LoggerFactory.getLogger(SimpleController.class)).addAppender(this.simpleControllerLogWatcher);
+        ((Logger) LoggerFactory.getLogger(SimpleFilter.class)).addAppender(this.simpleFilterLogWatcher);
+        ((Logger) LoggerFactory.getLogger(SimpleInterceptor.class)).addAppender(this.simpleInterceptorLogWatcher);
     }
 
     def "should show all logs"() {
@@ -44,18 +52,23 @@ class FiltersAndInterceptorsSpec extends Specification {
                 .andExpect(status().isOk())
                 .andExpect(content().string("hello world"))
 
-        12 == this.logWatcher.list.size()
-        this.logWatcher.list.get(0).getFormattedMessage().contains("SimpleFilter#doFilter started. Thread: ")
-        this.logWatcher.list.get(1).getFormattedMessage().contains("SimpleInterceptor#preHandler called. Thread: ")
-        this.logWatcher.list.get(2).getFormattedMessage().contains("SimpleController#handler called. Thread: ")
-        this.logWatcher.list.get(3).getFormattedMessage().contains("SimpleController#async task started. Thread: ")
-        this.logWatcher.list.get(4).getFormattedMessage().contains("SimpleInterceptor#afterConcurrentHandlingStarted called. Thread: ")
-        this.logWatcher.list.get(5).getFormattedMessage().contains("SimpleFilter#doFilter finished. Thread: ")
-        this.logWatcher.list.get(6).getFormattedMessage().contains("SimpleController#async task finished. Thread: ")
-        this.logWatcher.list.get(7).getFormattedMessage().contains("SimpleFilter#doFilter started. Thread: ")
-        this.logWatcher.list.get(8).getFormattedMessage().contains("SimpleInterceptor#preHandler called. Thread: ")
-        this.logWatcher.list.get(9).getFormattedMessage().contains("SimpleInterceptor#postHandle called. Thread: ")
-        this.logWatcher.list.get(10).getFormattedMessage().contains("SimpleInterceptor#afterCompletion called. Thread: ")
-        this.logWatcher.list.get(11).getFormattedMessage().contains("SimpleFilter#doFilter finished. Thread: ")
+        3 == this.simpleControllerLogWatcher.list.size()
+        4 == this.simpleFilterLogWatcher.list.size()
+        5 == this.simpleInterceptorLogWatcher.list.size()
+
+        this.simpleControllerLogWatcher.list.get(0).getFormattedMessage().contains("SimpleController#handler called. Thread: ")
+        this.simpleControllerLogWatcher.list.get(1).getFormattedMessage().contains("SimpleController#async task started. Thread: ")
+        this.simpleControllerLogWatcher.list.get(2).getFormattedMessage().contains("SimpleController#async task finished. Thread: ")
+
+        this.simpleFilterLogWatcher.list.get(0).getFormattedMessage().contains("SimpleFilter#doFilter started. Thread: ")
+        this.simpleFilterLogWatcher.list.get(1).getFormattedMessage().contains("SimpleFilter#doFilter finished. Thread: ")
+        this.simpleFilterLogWatcher.list.get(2).getFormattedMessage().contains("SimpleFilter#doFilter started. Thread: ")
+        this.simpleFilterLogWatcher.list.get(3).getFormattedMessage().contains("SimpleFilter#doFilter finished. Thread: ")
+
+        this.simpleInterceptorLogWatcher.list.get(0).getFormattedMessage().contains("SimpleInterceptor#preHandler called. Thread: ")
+        this.simpleInterceptorLogWatcher.list.get(1).getFormattedMessage().contains("SimpleInterceptor#afterConcurrentHandlingStarted called. Thread: ")
+        this.simpleInterceptorLogWatcher.list.get(2).getFormattedMessage().contains("SimpleInterceptor#preHandler called. Thread: ")
+        this.simpleInterceptorLogWatcher.list.get(3).getFormattedMessage().contains("SimpleInterceptor#postHandle called. Thread: ")
+        this.simpleInterceptorLogWatcher.list.get(4).getFormattedMessage().contains("SimpleInterceptor#afterCompletion called. Thread: ")
     }
 }
