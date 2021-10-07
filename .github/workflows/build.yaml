@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-java@v2
@@ -18,3 +18,8 @@ jobs:
       - uses: gradle/wrapper-validation-action@v1.0.4
       - name: Run Tests
         run: ./gradlew test
+      - name: Publish Test Report
+        uses: mikepenz/action-junit-report@v2.5.0
+        if: always()
+        with:
+          report_paths: '**/build/test-results/test/TEST-*.xml'
