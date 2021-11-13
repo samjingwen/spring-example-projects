@@ -1,4 +1,5 @@
 rootProject.name = 'spring-example-projects'
 
 include 'filters-and-interceptors'
-include 'aws-sns-example'
+include 'aws-sns-java-sdk-v2'
+include 'apache-poi-excel'
