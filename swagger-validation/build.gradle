@@ -1,0 +1,66 @@
+plugins {
+    id 'org.springframework.boot' version '2.5.6'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'java'
+    id "org.openapi.generator" version "5.3.0"
+}
+
+group = 'io.samjingwen'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    implementation 'io.swagger.core.v3:swagger-annotations:2.1.11'
+    implementation 'org.openapitools:jackson-databind-nullable:0.2.1'
+
+    implementation 'com.atlassian.oai:swagger-request-validator:2.22.0'
+    implementation 'com.atlassian.oai:swagger-request-validator-springmvc:2.22.0'
+
+    compileOnly 'org.projectlombok:lombok'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+compileJava {
+    dependsOn 'generateEmployeeSwagger'
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs "build/generated/openapi/src/main/java"
+        }
+    }
+}
+
+tasks.register('generateEmployeeSwagger', org.openapitools.generator.gradle.plugin.tasks.GenerateTask) {
+    inputSpec = "$projectDir/src/main/resources/swagger/employee.yaml"
+    outputDir = "$buildDir/generated/openapi"
+    generatorName = 'spring'
+    configFile = "$projectDir/src/main/resources/swagger/codegen-config.json"
+    apiPackage = "io.samjingwen.api.employees"
+    modelPackage = "io.samjingwen.api.employees"
+}
+
+
+
+

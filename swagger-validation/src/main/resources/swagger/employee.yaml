@@ -1,0 +1,80 @@
+openapi: 3.0.3
+info:
+  title: Employee API
+  version: 1.0.0
+paths:
+  /employee/{employeeId}:
+    get:
+      tags:
+        - Employee
+      operationId: getEmployees
+      parameters:
+        - in: path
+          name: employeeId
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Employee'
+  /employee:
+    put:
+      tags:
+        - Employee
+      operationId: putEmployees
+      requestBody:
+        description: Create Employees
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Employee'
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IsSuccessful'
+    post:
+      tags:
+        - Employee
+      operationId: postEmployees
+      requestBody:
+        description: Create Employees
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Employee'
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IsSuccessful'
+components:
+  schemas:
+    Employee:
+      properties:
+        email:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+      required:
+        - email
+        - firstName
+        - lastName
+    IsSuccessful:
+      properties:
+        success:
+          type: boolean
+      required:
+        - success

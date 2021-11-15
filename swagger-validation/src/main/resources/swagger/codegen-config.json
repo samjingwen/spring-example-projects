@@ -1,0 +1,18 @@
+{
+  "dateLibrary": "java8",
+  "generateApis": true,
+  "generateApiTests": false,
+  "generateApiDocumentation": false,
+  "generateModels": true,
+  "generateModelTests": false,
+  "generateModelDocumentation": false,
+  "generateSupportingFiles": false,
+  "hideGenerationTimestamp": true,
+  "interfaceOnly": true,
+  "library": "spring-boot",
+  "serializableModel": true,
+  "useBeanValidation": true,
+  "useTags": true,
+  "implicitHeaders": true,
+  "async": true
+}
