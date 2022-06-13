@@ -1,0 +1,17 @@
+version: '2.4'
+
+services:
+  kafka-zookeeper:
+    image: ghcr.io/openzipkin/zipkin-kafka:latest
+    container_name: kafka-zookeeper
+    ports:
+      - "19092:19092"
+
+  zipkin:
+    image: ghcr.io/openzipkin/zipkin:latest
+    environment:
+      - KAFKA_BOOTSTRAP_SERVERS=kafka-zookeeper:9092
+    depends_on:
+      - kafka-zookeeper
+    ports:
+      - "9411:9411"
