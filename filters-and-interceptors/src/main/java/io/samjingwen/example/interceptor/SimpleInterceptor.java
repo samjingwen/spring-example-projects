@@ -33,14 +33,17 @@ public class SimpleInterceptor implements AsyncHandlerInterceptor {
   public void afterCompletion(
       HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex)
       throws Exception {
-    log.info("SimpleInterceptor#afterCompletion called. Thread: " + Thread.currentThread().getName());
+    log.info(
+        "SimpleInterceptor#afterCompletion called. Thread: " + Thread.currentThread().getName());
     AsyncHandlerInterceptor.super.afterCompletion(request, response, handler, ex);
   }
 
   @Override
   public void afterConcurrentHandlingStarted(
       HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-    log.info("SimpleInterceptor#afterConcurrentHandlingStarted called. Thread: " + Thread.currentThread().getName());
+    log.info(
+        "SimpleInterceptor#afterConcurrentHandlingStarted called. Thread: "
+            + Thread.currentThread().getName());
     AsyncHandlerInterceptor.super.afterConcurrentHandlingStarted(request, response, handler);
   }
 }

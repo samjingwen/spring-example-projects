@@ -4,6 +4,7 @@ include 'filters-and-interceptors'
 include 'aws-sns-java-sdk-v2'
 include 'apache-poi-excel'
 include 'swagger-validation'
+include 'multi-tenant-jdbc'
 
 include 'telemetry:server'
 include 'telemetry:client'
