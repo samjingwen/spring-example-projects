@@ -1,8 +1,7 @@
 package io.samjingwen.multitenantjdbc;
 
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.HashMap;
+import java.util.function.Supplier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -25,21 +24,22 @@ public class SecurityConfiguration {
   }
 
   private static User createUser(String username, Integer tenantId) {
-    return new MultiTenantUser(username, "password", true, true, true, true, tenantId);
+    return new MultiTenantUser(username, "password", tenantId);
   }
 
   @Bean
   UserDetailsService userDetailsService() {
-    var rob = createUser("rwinch", 1);
-    var josh = createUser("jlong", 2);
+    Supplier<User> rob = () -> createUser("rwinch", 1);
+    Supplier<User> josh = () -> createUser("jlong", 2);
 
-    var users =
-        Stream.of(josh, rob).collect(Collectors.toMap(User::getUsername, Function.identity()));
+    var users = new HashMap<String, Supplier<User>>();
+    users.put("rwinch", rob);
+    users.put("jlong", josh);
 
     return username -> {
       var user = users.getOrDefault(username, null);
       if (user == null) throw new UsernameNotFoundException("Could not find " + username + "!");
-      return user;
+      return user.get();
     };
   }
 }
