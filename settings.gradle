@@ -1,3 +1,11 @@
+pluginManagement {
+    repositories {
+        maven { url 'https://repo.spring.io/release' }
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+
 rootProject.name = 'spring-example-projects'
 
 include 'filters-and-interceptors'
@@ -8,3 +16,7 @@ include 'multi-tenant-jdbc'
 
 include 'telemetry:server'
 include 'telemetry:client'
+
+include 'java-native-k8s-config:service'
+include 'java-native-k8s-config:edge'
+include 'java-native-k8s-config:configuration'
